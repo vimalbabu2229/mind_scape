@@ -20,6 +20,9 @@ class Journal(models.Model):
     audio = models.FileField(upload_to="audio/")
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
+    def __str__(self) -> str:
+        return f"{self.user.id} - {self.created_on}"
+
 # +++++++++++++++++++ JOURNAL IMAGES MODEL +++++++++++++++++++
 class JournalImages(models.Model):
     """
@@ -28,3 +31,6 @@ class JournalImages(models.Model):
     """
     image = models.ImageField(upload_to="images/")
     journal = models.ForeignKey(Journal, on_delete=models.CASCADE)
+
+    def __str__(self) -> str:
+        return self.journal
