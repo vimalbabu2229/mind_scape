@@ -1,7 +1,7 @@
 from rest_framework.routers import DefaultRouter
 from django.urls import path, include
 from accounts.views import AccountsViewSet
-from services.views import GoalViewSet, JournalViewSet
+from services.views import GoalViewSet, JournalViewSet, JournalImageViewSet
 
 router: DefaultRouter = DefaultRouter()
 # ____________________ ACCOUNTS APIs ________________________
@@ -39,6 +39,15 @@ Endpoints:
     POST    /api/services/journal/      ==> crate a new journal providing required fields
     GET     /api/services/journal/      ==> provide a 'date' to get the journal details
     PUT     /api/services/journal/<id>/ ==> update journal details
+"""
+# ++++++++ journal image apis ++++++++
+router.register(r"services/journal/images", JournalImageViewSet, basename="services_journal_images")
+"""
+Endpoints:
+    POST    /api/services/journal/images/<journal_id>/add/      ==> add new image to the journal
+                                                                    passing 'image' and journal id 
+    DELETE  /api/services/journal/images/<image_id>/delete/     ==> delete an image passing 
+                                                                    image id 
 """
 # Url patterns 
 urlpatterns = [

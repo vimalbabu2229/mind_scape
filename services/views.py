@@ -99,3 +99,37 @@ class JournalViewSet(ViewSet):
 
         except Exception as e :
             return Response({'detail': f'Something went wrong', 'exception': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+
+class JournalImageViewSet(ViewSet):
+    permission_classes = [IsAuthenticated]
+
+    @action(detail = True ,methods=['post'])
+    def add(self, request, pk=None):
+        try :
+            journal = Journal.objects.get(pk=pk)
+            serializer = JournalImagesSerializer(data=request.data, context={"request": request})
+            if serializer.is_valid():
+                serializer.save(journal=journal)
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                
+        except Journal.DoesNotExist:
+            return Response({'detail': 'Journal does not exist'}, status=status.HTTP_404_NOT_FOUND) 
+        
+        except Exception as e :
+            return Response({'detail': f'Something went wrong', 'exception': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    @action(detail = True ,methods=['delete'])
+    def delete(self, request, pk=None):
+        try:
+            image = JournalImages.objects.get(pk=pk)
+            image.delete()
+            return Response({'detail': 'Image deleted successfully'}, status=status.HTTP_200_OK)
+        
+        except JournalImages.DoesNotExist:
+            return Response({'detail': 'Journal image does not exist'}, status=status.HTTP_404_NOT_FOUND)
+        
+        except Exception as e :
+            return Response({'detail': f'Something went wrong', 'exception': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
