@@ -22,7 +22,7 @@ class Journal(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self) -> str:
-        return f"{self.user.id} - {self.created_on}"
+        return f"{self.user.id} - {self.date}"
 
 # +++++++++++++++++++ JOURNAL IMAGES MODEL +++++++++++++++++++
 class JournalImages(models.Model):
