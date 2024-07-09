@@ -14,7 +14,7 @@ class Goal(models.Model):
     
 # +++++++++++++++++++++ JOURNAL MODEL ++++++++++++++++++++++
 class Journal(models.Model):
-    created_on = models.DateField(auto_now_add=True, unique=True)
+    date = models.DateField(unique=True)
     thoughts = models.TextField()
     # Storing doodle as json
     doodle = models.JSONField(null=True)

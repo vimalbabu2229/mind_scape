@@ -5,7 +5,7 @@ class GoalAdmin(admin.ModelAdmin):
     list_display = ('date', 'category', 'user', 'created_at')
 
 class JournalAdmin(admin.ModelAdmin):
-    list_display = ('created_on', 'user', 'thoughts')
+    list_display = ('date', 'user', 'thoughts')
 
 class JournalImagesAdmin(admin.ModelAdmin):
     list_display = ('journal', 'image')

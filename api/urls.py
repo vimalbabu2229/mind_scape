@@ -32,7 +32,7 @@ Endpoints:
     PATCH   /api/services/goal/<id>/    ==> update the goal with provided 'id'
     DELETE  /api/services/goal/<id>/    ==> goal with the provided 'id' will be deleted 
 """   
-# ++++++++ journal apis ++++++++++                      
+# ++++++++ journal apis ++++++++++                    
 router.register(r"services/journal", JournalViewSet, basename="services_journal")
 """
 Endpoints:

@@ -54,7 +54,7 @@ class JournalViewSet(ViewSet):
                 return Response({'detail': 'Specify the date to retrieve your journal'}, status=status.HTTP_400_BAD_REQUEST)
             
             date = request.data['date']
-            journal = Journal.objects.filter(created_on=date)
+            journal = Journal.objects.filter(date=date)
             if not journal.exists():
                 return Response({}, status=status.HTTP_404_NOT_FOUND)
             else:
@@ -65,6 +65,9 @@ class JournalViewSet(ViewSet):
             return Response({'detail': f'Something went wrong', 'exception': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
     def update(self, request, pk=None):
+        if 'date' in request.data:
+            return Response({'detail': "'date' field cannot be updated"}, status=status.HTTP_400_BAD_REQUEST)
+        
         try :
             instance = Journal.objects.get(pk=pk)
             serializer = JournalSerializer(instance, data=request.data, context={'request': request}, partial=True)

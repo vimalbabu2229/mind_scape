@@ -18,7 +18,7 @@ class JournalImagesSerializer(serializers.ModelSerializer):
 class JournalSerializer(serializers.ModelSerializer):
     class Meta:
         model = Journal
-        fields = ['id','created_on', 'thoughts', 'doodle', 'audio']
+        fields = ['id','date', 'thoughts', 'doodle', 'audio']
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
