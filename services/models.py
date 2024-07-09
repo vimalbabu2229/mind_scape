@@ -14,10 +14,10 @@ class Goal(models.Model):
     
 # +++++++++++++++++++++ JOURNAL MODEL ++++++++++++++++++++++
 class Journal(models.Model):
-    created_on = models.DateField(auto_now_add=True)
+    created_on = models.DateField(auto_now_add=True, unique=True)
     thoughts = models.TextField()
-    doddle = models.ImageField(upload_to="doodle/")
-    audio = models.FileField(upload_to="audio/")
+    doodle = models.ImageField(upload_to="doodle/", null=True)
+    audio = models.FileField(upload_to="audio/", null=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self) -> str:
@@ -33,4 +33,4 @@ class JournalImages(models.Model):
     journal = models.ForeignKey(Journal, on_delete=models.CASCADE)
 
     def __str__(self) -> str:
-        return self.journal
+        return str(self.journal)

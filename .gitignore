@@ -6,3 +6,4 @@ accounts/__pycache__
 services/migrations
 services/__pycache__
 db.sqlite3
+media

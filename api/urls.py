@@ -1,7 +1,7 @@
 from rest_framework.routers import DefaultRouter
 from django.urls import path, include
 from accounts.views import AccountsViewSet
-from services.views import GoalViewSet
+from services.views import GoalViewSet, JournalViewSet
 
 router: DefaultRouter = DefaultRouter()
 # ____________________ ACCOUNTS APIs ________________________
@@ -31,7 +31,9 @@ Endpoints:
     GET     /api/services/goal/         ==> get all the goals of the user
     PATCH   /api/services/goal/<id>/    ==> update the goal with provided 'id'
     DELETE  /api/services/goal/<id>/    ==> goal with the provided 'id' will be deleted 
-"""                         
+"""   
+# ++++++++ journal apis ++++++++++                      
+router.register(r"services/journal", JournalViewSet, basename="services_journal")
 # Url patterns 
 urlpatterns = [
     path('', include(router.urls)),

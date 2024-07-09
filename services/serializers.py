@@ -7,4 +7,19 @@ class GoalSerializer(serializers.ModelSerializer):
         fields = "__all__"
         read_only_fields = ['user']
 
-# class JournalSerializer()
+class JournalImagesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = JournalImages
+        fields = ['id', 'image']
+
+
+class JournalSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Journal
+        fields = ['id','created_on', 'thoughts', 'doodle', 'audio']
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        images = JournalImages.objects.filter(journal=instance.id)
+        representation['images'] = JournalImagesSerializer(images, many=True, context=self.context).data
+        return representation
