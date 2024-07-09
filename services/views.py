@@ -38,19 +38,23 @@ class JournalViewSet(ViewSet):
             return Response({'detail': 'Journal already exists'}, status=status.HTTP_400_BAD_REQUEST)
         
         except Exception as e :
-            return Response({'detail': f'Something went wrong ({str(e)})'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({'detail': f'Something went wrong', 'exception': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def list(self, request):
-        if not 'date' in request.data:
-            return Response({'detail': 'Specify the date to retrieve your journal'}, status=status.HTTP_400_BAD_REQUEST)
-        
-        date = request.data['date']
-        journal = Journal.objects.filter(created_on=date)
-        if not journal.exists():
-            return Response({}, status=status.HTTP_404_NOT_FOUND)
-        else:
-            serializer = JournalSerializer(journal[0], context={'request':request})
-            return Response(serializer.data, status=status.HTTP_200_OK)
+        try:
+            if not 'date' in request.data:
+                return Response({'detail': 'Specify the date to retrieve your journal'}, status=status.HTTP_400_BAD_REQUEST)
+            
+            date = request.data['date']
+            journal = Journal.objects.filter(created_on=date)
+            if not journal.exists():
+                return Response({}, status=status.HTTP_404_NOT_FOUND)
+            else:
+                serializer = JournalSerializer(journal[0], context={'request':request})
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            
+        except Exception as e :
+            return Response({'detail': f'Something went wrong', 'exception': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
     def update(self, request, pk=None):
         try :
@@ -58,6 +62,7 @@ class JournalViewSet(ViewSet):
             serializer = JournalSerializer(instance, data=request.data, context={'request': request})
             if serializer.is_valid():
                 journal = serializer.save(user=request.user)
+                
                 return Response(JournalSerializer(journal, context={'request': request} ).data, status=status.HTTP_200_OK)
             else:
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -66,4 +71,4 @@ class JournalViewSet(ViewSet):
             return Response({'detail': 'Journal does not exist'}, status=status.HTTP_404_NOT_FOUND)
 
         except Exception as e :
-            return Response({'detail': 'Something went wrong'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({'detail': f'Something went wrong', 'exception': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
