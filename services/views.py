@@ -6,7 +6,7 @@ from rest_framework.permissions import IsAuthenticated
 from django.db import IntegrityError
 
 from .models import Goal, JournalImages, Journal
-from .serializers import GoalSerializer, JournalSerializer
+from .serializers import GoalSerializer, JournalSerializer, JournalImagesSerializer
 
 class GoalViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated]
@@ -24,10 +24,18 @@ class JournalViewSet(ViewSet):
     def create(self, request):
         serializer = JournalSerializer(data=request.data, context={'request': request} )
         try :
+            images = request.FILES.getlist('images')
+            # Validate the images before saving it 
+            if images :
+                for image in images:
+                    image_serializer = JournalImagesSerializer(data={'image' :image})
+                    if not image_serializer.is_valid():
+                        return Response(image_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                        
             if serializer.is_valid():
                 journal = serializer.save(user = request.user)
-                images = request.FILES.getlist('images')
                 if images :
+                    # Save images to database
                     for image in images:
                         JournalImages.objects.create(journal=journal, image= image)
                 
@@ -41,7 +49,7 @@ class JournalViewSet(ViewSet):
             return Response({'detail': f'Something went wrong', 'exception': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def list(self, request):
-        try:
+        try: 
             if not 'date' in request.data:
                 return Response({'detail': 'Specify the date to retrieve your journal'}, status=status.HTTP_400_BAD_REQUEST)
             
@@ -59,10 +67,26 @@ class JournalViewSet(ViewSet):
     def update(self, request, pk=None):
         try :
             instance = Journal.objects.get(pk=pk)
-            serializer = JournalSerializer(instance, data=request.data, context={'request': request})
+            serializer = JournalSerializer(instance, data=request.data, context={'request': request}, partial=True)
+
+            images = request.FILES.getlist('images')
+            # Validate the images before saving it 
+            if images :
+                for image in images:
+                    image_serializer = JournalImagesSerializer(data={'image' :image})
+                    if not image_serializer.is_valid():
+                        return Response(image_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                       
             if serializer.is_valid():
                 journal = serializer.save(user=request.user)
                 
+                if images :
+                    # delete already existing images 
+                    JournalImages.objects.filter(journal=journal).delete()
+                    # Save new images to database
+                    for image in images:
+                        JournalImages.objects.create(journal=journal, image= image)
+
                 return Response(JournalSerializer(journal, context={'request': request} ).data, status=status.HTTP_200_OK)
             else:
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

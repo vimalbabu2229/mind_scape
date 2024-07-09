@@ -1,6 +1,8 @@
 from rest_framework import serializers 
 from .models import Goal, Journal, JournalImages
 
+import json
+
 class GoalSerializer(serializers.ModelSerializer):
     class Meta:
         model = Goal

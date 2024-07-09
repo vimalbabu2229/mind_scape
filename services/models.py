@@ -16,7 +16,8 @@ class Goal(models.Model):
 class Journal(models.Model):
     created_on = models.DateField(auto_now_add=True, unique=True)
     thoughts = models.TextField()
-    doodle = models.ImageField(upload_to="doodle/", null=True)
+    # Storing doodle as json
+    doodle = models.JSONField(null=True)
     audio = models.FileField(upload_to="audio/", null=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 

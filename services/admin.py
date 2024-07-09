@@ -1,6 +1,16 @@
 from django.contrib import admin
 from .models import Goal, Journal, JournalImages
 
-admin.site.register(Goal)
-admin.site.register(Journal)
-admin.site.register(JournalImages)
+class GoalAdmin(admin.ModelAdmin):
+    list_display = ('date', 'category', 'user', 'created_at')
+
+class JournalAdmin(admin.ModelAdmin):
+    list_display = ('created_on', 'user', 'thoughts')
+
+class JournalImagesAdmin(admin.ModelAdmin):
+    list_display = ('journal', 'image')
+
+# Register models
+admin.site.register(Goal, GoalAdmin)
+admin.site.register(Journal, JournalAdmin)
+admin.site.register(JournalImages, JournalImagesAdmin)

@@ -34,6 +34,12 @@ Endpoints:
 """   
 # ++++++++ journal apis ++++++++++                      
 router.register(r"services/journal", JournalViewSet, basename="services_journal")
+"""
+Endpoints:
+    POST    /api/services/journal/      ==> crate a new journal providing required fields
+    GET     /api/services/journal/      ==> provide a 'date' to get the journal details
+    PUT     /api/services/journal/<id>/ ==> update journal details
+"""
 # Url patterns 
 urlpatterns = [
     path('', include(router.urls)),
