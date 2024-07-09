@@ -34,7 +34,7 @@ class AccountsViewSet(ViewSet):
             user = authenticate(username=username, password=password)
             if user is not None:
                 token, created = Token.objects.get_or_create(user=user)
-                return Response({'token':token.key}, status=status.HTTP_200_OK)
+                return Response({'token':token.key, 'username': user.username, 'email': user.email}, status=status.HTTP_200_OK)
             else :
                 return Response({'detail': 'Invalid Credentials'}, status=status.HTTP_401_UNAUTHORIZED)
         else :
