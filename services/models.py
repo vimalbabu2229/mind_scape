@@ -14,6 +14,7 @@ class Goal(models.Model):
     
 # +++++++++++++++++++++ JOURNAL MODEL ++++++++++++++++++++++
 class Journal(models.Model):
+    created_on = models.DateField(auto_now_add=True)
     thoughts = models.TextField()
     doddle = models.ImageField(upload_to="doodle/")
     audio = models.FileField(upload_to="audio/")
